@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"os"
 	"strings"
+	"time"
 )
 
 /*
@@ -68,12 +69,17 @@ func readDataFromFile(filename string) ([]byte, error) {
 	return os.ReadFile(filename)
 }
 
+// todo : function to shuffle a referenced deck
 func (d deck) shuffle() {
 	size := len(d)
-	cards := []string(d)
 
-	for index, card := range cards {
-		cards[index] = cards[rand.Intn(size-1)]
-		cards[rand.Intn(size-1)] = card
+	source := rand.NewSource(time.Now().UnixNano())
+
+	r := rand.New(source)
+
+	for index, card := range d {
+		newPosition := r.Intn(size-1)
+		d[index] = d[newPosition]
+		d[newPosition] = card
 	}
 }
